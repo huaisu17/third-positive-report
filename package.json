@@ -1,0 +1,8 @@
+{
+  "name": "third-positive-report",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check dist/app.js && node --check dist/content.js && node --check dist/campaign.js && node --check dist/engine.js && node --test tests/*.test.mjs"
+  }
+}
