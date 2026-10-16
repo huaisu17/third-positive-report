@@ -25,7 +25,7 @@ test('all four sites have local icons and supported addresses round-trip without
  assert.equal(routeFromAddress(RELAY_BV.toLowerCase()),'#video/'+RELAY_BV);assert.equal(routeFromAddress('https://qinghe.local/thread.php?id=reports'),'#post/reports');
  for(const invalid of ['https://example.org','javascript:alert(1)','https://bilibili.com.evil.test/video/'+RELAY_BV,'https://user:password@bilibili.com/video/'+RELAY_BV])assert.equal(routeFromAddress(invalid),null);
  for(const s of Object.values(SITES))assert.ok(existsSync(new URL('../dist/'+s.icon,import.meta.url)));
- const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');assert.equal([...html.matchAll(/data-site-switch=/g)].length,4);assert.match(html,/id="addressForm"/);assert.match(html,/id="addressFavicon"/);
+ const html=readFileSync(new URL('../dist/index.html',import.meta.url),'utf8');assert.doesNotMatch(html,/data-site-switch|addressForm|addressFavicon/);for(const entry of ['canteen/index.html','video/index.html','pan/index.html'])assert.ok(existsSync(new URL('../dist/'+entry,import.meta.url)));
 });
 
 test('old bookmarks redirect to the migrated evidence carrier without advancing the case',()=>{

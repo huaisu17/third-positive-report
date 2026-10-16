@@ -1,5 +1,6 @@
-import {SITES} from './network-content.js?v=33';
-import {siteForRoute,addressForRoute,routeFromAddress} from './network-engine.js?v=33';
+// Legacy compatibility module: no production HTML entry loads this UI. Active pages use state-sync.js and qinghe_arg_save.
+import {SITES} from './network-content.js?v=40';
+import {siteForRoute,addressForRoute,routeFromAddress} from './network-engine.js?v=40';
 export function createSiteShell({getState,save,navigate,toast}){
  function sync(route){const id=siteForRoute(route),site=SITES[id],state=getState();document.querySelector('#appWindow').dataset.site=id;document.querySelectorAll('[data-site-switch]').forEach(b=>{const active=b.dataset.siteSwitch===id;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});
   const field=document.querySelector('#virtualAddress'),address=addressForRoute(route);if(address)field.value=address;else if(!field.value.startsWith('qinghe.local/'))field.value='qinghe.local/forum.php';
