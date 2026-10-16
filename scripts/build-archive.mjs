@@ -1,0 +1,22 @@
+// Rebuild the fictional encrypted workbook. Contains puzzle spoilers, not credentials.
+import {randomBytes,pbkdf2Sync,createCipheriv} from 'node:crypto';
+import {writeFileSync,mkdirSync} from 'node:fs';
+const columns=['日期','运行时段','测温记录','记录人/补记时间','原始设备记录'];
+const rows=[['03-11','20:30—21:00','95.0℃ / 连续运行','汇总岗 / 03-18 16:20','未附'],['03-12','20:30—21:00','95.0℃ / 连续运行','汇总岗 / 03-18 16:20','未附'],['03-13','20:30—21:00','95.0℃ / 连续运行','贺诚 / 03-18 16:21补记','未附'],['03-18','16:22','CJ0313改为合格','校内修订；03-19入结算','详见原单及盖章改版']];
+const escape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+function crc32(b){let n=0xffffffff;for(const v of b){n^=v;for(let i=0;i<8;i++)n=(n>>>1)^((n&1)?0xedb88320:0);}return (n^0xffffffff)>>>0;}
+function zip(files){let offset=0;const local=[],central=[];for(const [name,text] of Object.entries(files)){const n=Buffer.from(name),data=Buffer.from(text),crc=crc32(data),h=Buffer.alloc(30);h.writeUInt32LE(0x04034b50);h.writeUInt16LE(20,4);h.writeUInt32LE(crc,14);h.writeUInt32LE(data.length,18);h.writeUInt32LE(data.length,22);h.writeUInt16LE(n.length,26);local.push(h,n,data);const c=Buffer.alloc(46);c.writeUInt32LE(0x02014b50);c.writeUInt16LE(20,4);c.writeUInt16LE(20,6);c.writeUInt32LE(crc,16);c.writeUInt32LE(data.length,20);c.writeUInt32LE(data.length,24);c.writeUInt16LE(n.length,28);c.writeUInt32LE(offset,42);central.push(c,n);offset+=h.length+n.length+data.length;}const cd=Buffer.concat(central),e=Buffer.alloc(22);e.writeUInt32LE(0x06054b50);e.writeUInt16LE(Object.keys(files).length,8);e.writeUInt16LE(Object.keys(files).length,10);e.writeUInt32LE(cd.length,12);e.writeUInt32LE(offset,16);return Buffer.concat([...local,cd,e]);}
+const workbook=zip({
+ '[Content_Types].xml':'<?xml version="1.0"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>',
+ '_rels/.rels':'<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
+ 'xl/workbook.xml':'<?xml version="1.0"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="虚构消杀台账" sheetId="1" r:id="rId1"/></sheets></workbook>',
+ 'xl/_rels/workbook.xml.rels':'<?xml version="1.0"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>',
+ 'xl/worksheets/sheet1.xml':`<?xml version="1.0" encoding="UTF-8"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${[['L-0313 / 剧情虚构，不作为真实凭证'],columns,...rows].map((r,i)=>`<row r="${i+1}">${r.map((v,j)=>`<c r="${String.fromCharCode(65+j)}${i+1}" t="inlineStr"><is><t>${escape(v)}</t></is></c>`).join('')}</row>`).join('')}</sheetData></worksheet>`
+});
+const salt=randomBytes(16),iv=randomBytes(12),key=pbkdf2Sync('20240912',salt,110000,32,'sha256'),cipher=createCipheriv('aes-256-gcm',key,iv);
+const plain=Buffer.from(JSON.stringify({columns,rows,xlsx:workbook.toString('base64')}));
+const encrypted=Buffer.concat([cipher.update(plain),cipher.final(),cipher.getAuthTag()]);
+const target=new URL('../dist/assets/L-0313.enc.json',import.meta.url);
+mkdirSync(new URL('../dist/assets/',import.meta.url),{recursive:true});
+writeFileSync(target,JSON.stringify({format:'QH-ARCHIVE-1',iterations:110000,salt:salt.toString('base64'),iv:iv.toString('base64'),ciphertext:encrypted.toString('base64')})+'\n');
+console.log('Encrypted archive rebuilt; workbook and evidence preview included.');
