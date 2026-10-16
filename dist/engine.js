@@ -1,4 +1,4 @@
-import {freshExpansion,parseExpansion} from './expansion-engine.js?v=31';
+import {freshExpansion,parseExpansion} from './expansion-engine.js?v=32';
 export const SAVE_KEY='qinghe.third-report.v1';
 export const CLUES={
  post:{id:'post',title:'原帖里的三份材料',code:'E03',text:'前两张是我和乌鸡的。最后一张是小号发来的，阿哲也不认识他。',route:'#post/reports'},
@@ -13,8 +13,8 @@ Object.assign(CLUES,{
  reportWuji:{id:'reportWuji',code:'B',title:'报告B · 乌鸡的检查结果',text:'3月18日的呼气检查结果为阳性。纸面平整，没有手写圈画。',route:'#doc/wuji'},
  reportUnknown:{id:'reportUnknown',code:'C',title:'报告C · 第三张附件',text:'图中日期写着3月14日，结果为阳性，纸面有折痕和蓝笔圈画；持有人身份未核实。',route:'#doc/unknown'}
 });
-export function freshState(){return {version:1,introDone:false,read:[],clues:[],deduced:false,finished:false,hint:0,opened:['by','wuji'],easter:[],caseStage:0,caseSolved:false,activeAccount:'by',savedDocs:[],folders:[],caseHint:0,endingChoice:null,expansion:freshExpansion()};}
-export function parseSave(raw){try{const x=JSON.parse(raw);if(!x||x.version!==1)return freshState();const s=freshState();for(const k of ['introDone','deduced','finished'])s[k]=x[k]===true;for(const k of ['read','opened','easter'])s[k]=Array.isArray(x[k])?[...new Set(x[k].filter(v=>typeof v==='string'&&v.length<100))].slice(0,300):s[k];s.clues=Array.isArray(x.clues)?[...new Set(x.clues.filter(v=>Object.hasOwn(CLUES,v)))]:[];s.hint=Number.isInteger(x.hint)?Math.min(3,Math.max(0,x.hint)):0;if(!s.deduced)s.finished=false;s.caseStage=s.finished&&Number.isInteger(x.caseStage)?Math.max(0,Math.min(8,x.caseStage)):0;s.caseSolved=s.finished&&s.caseStage===8&&x.caseSolved===true;if(s.caseStage===8&&!s.caseSolved)s.caseStage=7;s.activeAccount=['by','jie','yida','azhe'].includes(x.activeAccount)?x.activeAccount:'by';s.savedDocs=Array.isArray(x.savedDocs)?[...new Set(x.savedDocs.filter(v=>typeof v==='string'&&v.length<50))].slice(0,100):[];s.folders=s.finished&&s.caseStage>=5&&Array.isArray(x.folders)&&x.folders.includes('makeup')?['makeup']:[];s.caseHint=Number.isInteger(x.caseHint)?Math.min(2,Math.max(0,x.caseHint)):0;s.endingChoice=s.caseSolved&&['apology','later'].includes(x.endingChoice)?x.endingChoice:null;if(!s.finished){s.activeAccount='by';s.savedDocs=[];}s.expansion=parseExpansion(x.expansion,s.caseSolved);return s;}catch{return freshState();}}
+export function freshState(){return {version:1,introDone:false,read:[],discoveredPosts:[],clues:[],deduced:false,finished:false,hint:0,opened:['by','wuji'],easter:[],caseStage:0,caseSolved:false,activeAccount:'by',savedDocs:[],folders:[],caseHint:0,endingChoice:null,expansion:freshExpansion()};}
+export function parseSave(raw){try{const x=JSON.parse(raw);if(!x||x.version!==1)return freshState();const s=freshState();for(const k of ['introDone','deduced','finished'])s[k]=x[k]===true;for(const k of ['read','opened','easter'])s[k]=Array.isArray(x[k])?[...new Set(x[k].filter(v=>typeof v==='string'&&v.length<100))].slice(0,300):s[k];s.discoveredPosts=[...new Set([...(Array.isArray(x.discoveredPosts)?x.discoveredPosts:[]),...s.read.filter(v=>v.startsWith('post:')).map(v=>v.slice(5))].filter(id=>['noodles','exam','printing','sports'].includes(id)))];s.clues=Array.isArray(x.clues)?[...new Set(x.clues.filter(v=>Object.hasOwn(CLUES,v)))]:[];s.hint=Number.isInteger(x.hint)?Math.min(3,Math.max(0,x.hint)):0;if(!s.deduced)s.finished=false;s.caseStage=s.finished&&Number.isInteger(x.caseStage)?Math.max(0,Math.min(8,x.caseStage)):0;s.caseSolved=s.finished&&s.caseStage===8&&x.caseSolved===true;if(s.caseStage===8&&!s.caseSolved)s.caseStage=7;s.activeAccount=['by','jie','yida','azhe'].includes(x.activeAccount)?x.activeAccount:'by';s.savedDocs=Array.isArray(x.savedDocs)?[...new Set(x.savedDocs.filter(v=>typeof v==='string'&&v.length<50))].slice(0,100):[];s.folders=s.finished&&s.caseStage>=5&&Array.isArray(x.folders)&&x.folders.includes('makeup')?['makeup']:[];s.caseHint=Number.isInteger(x.caseHint)?Math.min(2,Math.max(0,x.caseHint)):0;s.endingChoice=s.caseSolved&&['apology','later'].includes(x.endingChoice)?x.endingChoice:null;if(!s.finished){s.activeAccount='by';s.savedDocs=[];}s.expansion=parseExpansion(x.expansion,s.caseSolved);return s;}catch{return freshState();}}
 export function addClue(state,id){if(!Object.hasOwn(CLUES,id)||state.clues.includes(id))return false;state.clues.push(id);return true;}
 export function recordOpeningDocument(state,id){if(!Object.hasOwn(OPENING_DOC_CLUES,id)||!canReadDoc(state,id))return false;let changed=addClue(state,OPENING_DOC_CLUES[id]);if(!state.read.includes('doc:'+id)){state.read.push('doc:'+id);changed=true;}if(!state.opened.includes(id)){state.opened.push(id);changed=true;}return changed;}
 export function normalize(s){return String(s??'').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');}
@@ -48,9 +48,9 @@ Object.assign(CLUES,{
  pressure:{id:'pressure',code:'E15b',title:'先别查了',text:'陈叙知道我开始查图以后，提起杰哥的手机，劝我把事情停下来。杰哥后来仍愿意交出相关副本。',route:'#casefile/pressure'}
 });
 export const GAME_ACCOUNTS={
- jie:{username:'jiege',password:'0367',stage:0,name:'杰哥'},
- yida:{username:'yida',password:'1018',stage:1,name:'益达'},
- azhe:{username:'heshe',password:'hs0323',stage:3,name:'阿哲'}
+ jie:{username:'jiege',password:'1264',stage:0,name:'杰哥'},
+ yida:{username:'yida',password:'b1018',stage:1,name:'益达'},
+ azhe:{username:'heshe',password:'hs032316',stage:3,name:'阿哲'}
 };
 export function canUseAccount(state,id){return Object.hasOwn(GAME_ACCOUNTS,id)&&state.finished&&state.caseStage>=GAME_ACCOUNTS[id].stage;}
 export function checkAccountLogin(state,username,password){
@@ -58,8 +58,8 @@ export function checkAccountLogin(state,username,password){
  const found=Object.entries(GAME_ACCOUNTS).find(([,a])=>a.username===name);
  if(!found||!canUseAccount(state,found[0]))return {ok:false,message:'账号没有对上，或者你还没拿到这个账号的线索。'};
  const pass=String(password??'').normalize('NFKC').trim().toLowerCase();
- if(found[0]==='azhe'&&pass==='0323')return {ok:false,message:'需补充校刊英文缩写，按“英文缩写＋月日”填写。'};
- if(pass!==found[1].password)return {ok:false,message:'口令不对。再看看对方给你的提示，日期和号码要保留开头的0。'};
+ if(found[0]==='azhe'&&pass==='0323')return {ok:false,message:'需补充校刊英文缩写，缩写放在前面；随后还要核对阅览规则的其余部分。'};
+ if(pass!==found[1].password)return {ok:false,message:'口令不对。回看账号说明和另一份材料，别把取餐号、排班天数或下一期编号直接当答案。'};
  return {ok:true,account:found[0],message:'登录成功。'};
 }
 export function unlockCaseFolder(state,password){if(!state.finished||state.caseStage<5)return {ok:false,message:'现在还没有这份资料夹。'};if(String(password??'').normalize('NFKC').replace(/\D/g,'').slice(-8).padStart(8,'0')!=='03281430')return {ok:false,message:'没有对上。口令是补测的月日，再接24小时制的开考时间。'};if(!state.folders.includes('makeup'))state.folders.push('makeup');return {ok:true,message:'资料夹已打开。'};}
@@ -69,13 +69,13 @@ export function judgeCaseStep(state,step,payload={}){
  const missing=CASE_REQUIREMENTS[step].filter(id=>!state.clues.includes(id));
  if(missing.length)return {ok:false,message:'还有材料没记下来：'+missing.map(id=>CLUES[id].title).join('、')+'。'};
  let good=false,message='还有地方没对上，回到旁边的材料再看一眼。';
- if(step===0){good=Array.isArray(payload.order)&&payload.order.join(',')==='pickup,shower,mix,taste'&&payload.bowl==='own';message='先看取餐时间，再看杰哥去洗澡、by拌面、乌鸡尝面的先后。益达面前的汤碗在小票上另有一项。';}
+ if(step===0){good=Array.isArray(payload.order)&&payload.order.join(',')==='pickup,shower,mix,taste'&&payload.bowl==='own';message='小票记录了买来的东西，照片拍在后来。先分清这两个时点，再核对每只碗对应的商品。';}
  if(step===1){good=payload.deleted==='letter'&&payload.result==='negative';message='删照片的对话说了文件拍的是什么；检查结果则要看益达拿来的那一张，不能拿早先拉肚子代替。';}
- if(step===2){good=payload.bathroom==='dorm'&&payload.letter==='dorm'&&payload.folder==='chen';message='分开看旧事和新消息。花洒和那封信，宿舍里早就知道；“夹在语文卷最后”是在这次午休才说的。';}
- if(step===3){good=sameMembers(payload.marks,['fold','circle']);message='相同模板和同样阳性很常见。需要找纸张折痕和圈画缺口这种出现在同一位置的细节，并核对阿哲收到的原图。';}
+ if(step===2){good=payload.bathroom==='dorm'&&payload.letter==='dorm'&&payload.folder==='chen';message='知情范围要以匿名发言前为界。有人知道旧事，不等于也听过这次午休的新消息。';}
+ if(step===3){good=sameMembers(payload.marks,['fold','circle']);message=payload.marks?.includes('stamp')?'印章的角度不唯一：同一批盖章可能保持近似方向，扫描底版也可能重复印章。它不能区分两张独立报告。':payload.marks?.includes('noise')?'打印灰点可能来自同一台设备、扫描底版或复印过程。出现同样噪点只能提示设备或模板相同，不能锁定同一张纸。':'模板、项目和阳性结论都会重复。请找与纸张使用过程有关、能具体对齐的痕迹，并核对收稿原件。';}
  if(step===4){good=sameMembers(payload.paths,['by-jie','by-chen','anonymous-azhe']);message='原图不只经过一部手机。重看你与陈叙的打印对话，以及阿哲收稿时的附件。';}
- if(step===5){const date=v=>String(v??'').replace(/\D/g,'').slice(-4);good=date(payload.absence)==='0314'&&date(payload.check)==='0315'&&date(payload.print)==='0317';message='空座位对应3月14日周测；你的报告是3月15日，打印是3月17日。把这几个日期分别放回对应的事。';}
- if(step===6){good=payload.edit==='azhe'&&payload.remove==='author';message='原帖编辑记录和楼层撤回提示是两回事。阿哲更正正文；6、7楼是匿名作者自己撤回的。';}
+ if(step===5){const date=v=>String(v??'').replace(/\D/g,'').slice(-4);good=date(payload.absence)==='0314'&&date(payload.check)==='0315'&&date(payload.print)==='0317';message='三个日期分别来自考试记录、报告和打印对话。别把聊天中回忆的日期当成聊天发生的日期。';}
+ if(step===6){good=payload.edit==='azhe'&&payload.remove==='author';message='正文更改和楼层撤回属于两条操作记录。按各自记录里的行为人判断，不能因为楼主改过正文就认定他也撤过楼层。';}
  if(step===7){good=payload.person==='chen'&&payload.image==='sameImage'&&payload.access==='printing'&&payload.information==='scope'&&payload.motive==='examNotice'&&payload.source==='unknown';message='把四层依据分别放好：同源图、原图接触、私下消息、缺考动机。指认假材料的制作人与认定感染源，是两个问题。';}
  return good?{ok:true,message:'这几件事对上了。',reward:step===3?'sameImage':null}:{ok:false,message};
 }

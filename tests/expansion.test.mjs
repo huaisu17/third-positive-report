@@ -9,7 +9,7 @@ import {decryptArchive,workbookBlob} from '../dist/archive-crypto.js';
 const makeState=()=>{const s=freshState();s.deduced=true;s.finished=true;s.caseSolved=true;s.caseStage=8;return s;};
 const reload=s=>parseSave(JSON.stringify(s));
 const collect=(s,ids)=>{for(const id of ids)assert.equal(collectExpansionDoc(s,id),true,'collect '+id);};
-const answers={1:{swipe:'s3',attendance:'a2',signoff:'r2',explanation:'proxy'},2:{patient:'R07',repeat:'03-29',interpretation:'unreliable',batch:'unknown'},3:{fragments:['d2-head','d2-tail']}};
+const answers={1:{roster:'m4',swipe:'s3',attendance:'a2',signoff:'r2',explanation:'proxy'},2:{patient:'R07',repeat:'03-29',interpretation:'unreliable',batch:'unknown'},3:{fragments:['d2-head','d2-tail']}};
 const envelope=JSON.parse(readFileSync(new URL('../dist/assets/L-0313.enc.json',import.meta.url),'utf8'));
 function staff(s){collect(s,EXP_REQUIREMENTS[0]);assert.equal(recoverStaffAccount(s,'夜空中最亮的星').ok,true);assert.equal(loginStaffAccount(s,'shenzhi','sz-read-0331').ok,true);}
 
