@@ -19,7 +19,7 @@ const envelope=JSON.parse(fs.readFileSync(new URL('../dist/assets/L-0313.enc.jso
 
 test('four independently bootable HTML documents load their own entry script and no pseudo desktop or chapter runtime',()=>{
  const entries=[['index.html','forum.js'],['canteen/index.html','site.js'],['video/index.html','site.js'],['pan/index.html','site.js']];
- for(const [path,script]of entries){const html=fs.readFileSync(new URL('../dist/'+path,import.meta.url),'utf8');assert.match(html,/<main id="app"/);assert.ok(html.includes(`src="${script}?v=40"`));assert.doesNotMatch(html,/data-site-switch|appWindow|window-titlebar|addressForm|src="app\.js/);const base=new URL('../dist/'+path,import.meta.url);for(const [,url]of html.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^\"]*)?"/g))if(!url.includes('://'))assert.ok(fs.existsSync(new URL(url,base)),path+' '+url);}
+ for(const [path,script]of entries){const html=fs.readFileSync(new URL('../dist/'+path,import.meta.url),'utf8');assert.match(html,/<main id="app"/);assert.ok(html.includes(`src="${script}?v=41"`));assert.doesNotMatch(html,/data-site-switch|appWindow|window-titlebar|addressForm|src="app\.js/);const base=new URL('../dist/'+path,import.meta.url);for(const [,url]of html.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^\"]*)?"/g))if(!url.includes('://'))assert.ok(fs.existsSync(new URL(url,base)),path+' '+url);}
  const from=['forum','canteen','video','pan'];for(const origin of from)for(const target of from){const rel=siteURL(target,{view:'test'},origin),base=new URL(origin==='forum'?'https://x.test/project/index.html':`https://x.test/project/${origin}/index.html`);assert.equal(new URL(rel,base).pathname,'/project/'+(target==='forum'?'index.html':target+'/index.html'));assert.ok(!rel.startsWith('/'));}
  for(const id of Object.keys(EVIDENCE)){const d=EVIDENCE[id];assert.ok(from.includes(d.site),id);const target=siteURL(d.site,d.params,'pan');assert.ok(target.includes('index.html'),id);}
 });
@@ -84,5 +84,5 @@ test('mock playback holds exactly four stills, seeks by timestamp and cancels st
 });
 
 test('old single-page bookmarks map onto real document URLs without preserving chapter mechanics',()=>{
- for(const [hash,site]of [['#portal/card','canteen'],['#video/'+SPRING_BV,'video'],['#pan/relay','pan'],['#vault','pan'],['#archive/medical','pan'],['#doc/by','forum']])assert.equal(translateLegacy(hash).site,site);assert.equal(translateLegacy('#casefile/receipt').params.view,'card');assert.equal(translateLegacy('#chapter/12').params.thread,'chen');
+ for(const [hash,site]of [['#portal/card','canteen'],['#video/'+SPRING_BV,'video'],['#pan/relay','pan'],['#vault','pan'],['#archive/medical','pan'],['#doc/by','forum']])assert.equal(translateLegacy(hash).site,site);assert.equal(translateLegacy('#casefile/receipt').params.view,'card');assert.equal(translateLegacy('#chapter/12').params.thread,'chen');assert.equal(translateLegacy('#doc/letter').site,'pan');assert.equal(translateLegacy('#doc/letter').params.folder,'yida');assert.equal(translateLegacy('#doc/score').params.folder,'jie');
 });

@@ -36,7 +36,7 @@ dist/archive-crypto.js          原PBKDF2 + AES-GCM与XLSX下载
 <body data-site="canteen">
   <main id="app" tabindex="-1"></main>
   <script type="module" src="../state-sync.js?v=40"></script>
-  <script type="module" src="site.js?v=40"></script>
+  <script type="module" src="site.js?v=41"></script>
 </body>
 </html>
 ```

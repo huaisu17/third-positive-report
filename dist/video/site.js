@@ -1,4 +1,4 @@
-import {store,pocket,url,asset,params,mountPage,esc,watchReads} from '../arg-ui.js?v=40';
+import {store,pocket,url,asset,params,mountPage,esc,watchReads} from '../arg-ui.js?v=41';
 import {CLIPS,SPRING_BV,AUTUMN_BV} from '../arg-content.js?v=40';
 import {createMockPlayer,danmakuAt,displayTime} from './mock-player.js?v=40';
 const app=document.querySelector('#app');let controller=null,lastFrame=-1,lastTime=0;
