@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check dist/app.js && node --check dist/content.js && node --check dist/campaign.js && node --check dist/engine.js && node --check dist/expansion-engine.js && node --check dist/expansion-content.js && node --check dist/expansion-ui.js && node --check dist/archive-crypto.js && node --check dist/forum-ui.js && node --check dist/immersion.js && node --test tests/*.test.mjs",
+    "check": "node --check dist/app.js && node --check dist/content.js && node --check dist/campaign.js && node --check dist/engine.js && node --check dist/expansion-engine.js && node --check dist/expansion-content.js && node --check dist/expansion-ui.js && node --check dist/archive-crypto.js && node --check dist/forum-ui.js && node --check dist/immersion.js && node --check dist/auto-read.js && node --check dist/original-reading.js && node --test tests/*.test.mjs",
     "build:archive": "node scripts/build-archive.mjs",
     "build:reports": "node scripts/build-report-forms.mjs"
   }

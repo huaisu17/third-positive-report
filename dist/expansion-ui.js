@@ -1,6 +1,6 @@
-import {EXP_STEPS,EXP_RELATIONS,EXP_EDGES,EXP_DOC_GATES,edgeKey,canAccessExpansionDoc,collectExpansionDoc,recoverStaffAccount,loginStaffAccount,solveExpansion,linkEvidence,chooseExpansionEnding} from './expansion-engine.js?v=30';
-import {archiveChapters,archiveDocs,cacheFragments,archiveHints,archiveEndings} from './expansion-content.js?v=30';
-import {decryptArchive,workbookBlob} from './archive-crypto.js?v=30';
+import {EXP_STEPS,EXP_RELATIONS,EXP_EDGES,EXP_DOC_GATES,edgeKey,canAccessExpansionDoc,collectExpansionDoc,recoverStaffAccount,loginStaffAccount,solveExpansion,linkEvidence,chooseExpansionEnding} from './expansion-engine.js?v=31';
+import {archiveChapters,archiveDocs,cacheFragments,archiveHints,archiveEndings} from './expansion-content.js?v=31';
+import {decryptArchive,workbookBlob} from './archive-crypto.js?v=31';
 
 export function createArchive({getState,save,view,heading,esc,toast,showReader,render}){
  let selected=[],fragments=[],decrypted=null,typingTimer,soundContext;

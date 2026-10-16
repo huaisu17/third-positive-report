@@ -1,4 +1,4 @@
-import {freshExpansion,parseExpansion} from './expansion-engine.js?v=30';
+import {freshExpansion,parseExpansion} from './expansion-engine.js?v=31';
 export const SAVE_KEY='qinghe.third-report.v1';
 export const CLUES={
  post:{id:'post',title:'原帖里的三份材料',code:'E03',text:'前两张是我和乌鸡的。最后一张是小号发来的，阿哲也不认识他。',route:'#post/reports'},
@@ -7,9 +7,16 @@ export const CLUES={
  printing:{id:'printing',title:'一次普通的打印委托',code:'E13',text:'我请陈叙帮忙打印过报告。他说原图先留着，需要再印就找他。',route:'#chat/chen'},
  comment:{id:'comment',title:'说法逐渐发生了变化',code:'R01',text:'有人已经在传“一顿夜宵吃出三个”，但阿哲没这么写。',route:'#post/reports'}
 };
+export const OPENING_DOC_CLUES=Object.freeze({by:'reportBy',wuji:'reportWuji',unknown:'reportUnknown',notebook:'diary'});
+Object.assign(CLUES,{
+ reportBy:{id:'reportBy',code:'A',title:'报告A · by的检查结果',text:'3月15日的呼气检查结果为阳性。纸张左下有折痕，结果旁有蓝笔圈画。',route:'#doc/by'},
+ reportWuji:{id:'reportWuji',code:'B',title:'报告B · 乌鸡的检查结果',text:'3月18日的呼气检查结果为阳性。纸面平整，没有手写圈画。',route:'#doc/wuji'},
+ reportUnknown:{id:'reportUnknown',code:'C',title:'报告C · 第三张附件',text:'图中日期写着3月14日，结果为阳性，纸面有折痕和蓝笔圈画；持有人身份未核实。',route:'#doc/unknown'}
+});
 export function freshState(){return {version:1,introDone:false,read:[],clues:[],deduced:false,finished:false,hint:0,opened:['by','wuji'],easter:[],caseStage:0,caseSolved:false,activeAccount:'by',savedDocs:[],folders:[],caseHint:0,endingChoice:null,expansion:freshExpansion()};}
 export function parseSave(raw){try{const x=JSON.parse(raw);if(!x||x.version!==1)return freshState();const s=freshState();for(const k of ['introDone','deduced','finished'])s[k]=x[k]===true;for(const k of ['read','opened','easter'])s[k]=Array.isArray(x[k])?[...new Set(x[k].filter(v=>typeof v==='string'&&v.length<100))].slice(0,300):s[k];s.clues=Array.isArray(x.clues)?[...new Set(x.clues.filter(v=>Object.hasOwn(CLUES,v)))]:[];s.hint=Number.isInteger(x.hint)?Math.min(3,Math.max(0,x.hint)):0;if(!s.deduced)s.finished=false;s.caseStage=s.finished&&Number.isInteger(x.caseStage)?Math.max(0,Math.min(8,x.caseStage)):0;s.caseSolved=s.finished&&s.caseStage===8&&x.caseSolved===true;if(s.caseStage===8&&!s.caseSolved)s.caseStage=7;s.activeAccount=['by','jie','yida','azhe'].includes(x.activeAccount)?x.activeAccount:'by';s.savedDocs=Array.isArray(x.savedDocs)?[...new Set(x.savedDocs.filter(v=>typeof v==='string'&&v.length<50))].slice(0,100):[];s.folders=s.finished&&s.caseStage>=5&&Array.isArray(x.folders)&&x.folders.includes('makeup')?['makeup']:[];s.caseHint=Number.isInteger(x.caseHint)?Math.min(2,Math.max(0,x.caseHint)):0;s.endingChoice=s.caseSolved&&['apology','later'].includes(x.endingChoice)?x.endingChoice:null;if(!s.finished){s.activeAccount='by';s.savedDocs=[];}s.expansion=parseExpansion(x.expansion,s.caseSolved);return s;}catch{return freshState();}}
 export function addClue(state,id){if(!Object.hasOwn(CLUES,id)||state.clues.includes(id))return false;state.clues.push(id);return true;}
+export function recordOpeningDocument(state,id){if(!Object.hasOwn(OPENING_DOC_CLUES,id)||!canReadDoc(state,id))return false;let changed=addClue(state,OPENING_DOC_CLUES[id]);if(!state.read.includes('doc:'+id)){state.read.push('doc:'+id);changed=true;}if(!state.opened.includes(id)){state.opened.push(id);changed=true;}return changed;}
 export function normalize(s){return String(s??'').normalize('NFKC').toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');}
 export function searchItems(query,items){const q=normalize(query);if(!q)return [];return items.map((x,i)=>{const name=normalize(x.title);const words=normalize([x.title,...(x.keywords??[]),x.summary??''].join(' '));return {x,i,rank:name===q?0:name.includes(q)?1:words.includes(q)?2:99};}).filter(v=>v.rank<99).sort((a,b)=>a.rank-b.rank||a.i-b.i).map(v=>v.x);}
 export function judgeDeduction(evidence,conclusion){const selected=new Set(evidence);if(selected.size<2)return {ok:false,message:'先选出至少两条能够支持判断的材料。你可以回到原帖，或者问问阿哲。'};if(conclusion!=='unverified')return {ok:false,message:'先等等，这样就认定是益达，超出了现在知道的事。再看看阿哲到底认不认识第三个人。'};if(!selected.has('post')||!selected.has('source'))return {ok:false,message:'想法没问题。把原帖和问阿哲那段一起选上，才记得清楚这件事。'};return {ok:true,message:'判断成立。阿哲也不认识第三个人，现在还认不出来。至于益达，先去问问他。'};}
@@ -50,7 +57,9 @@ export function checkAccountLogin(state,username,password){
  const name=String(username??'').normalize('NFKC').trim().toLowerCase();
  const found=Object.entries(GAME_ACCOUNTS).find(([,a])=>a.username===name);
  if(!found||!canUseAccount(state,found[0]))return {ok:false,message:'账号没有对上，或者你还没拿到这个账号的线索。'};
- if(String(password??'').normalize('NFKC').trim().toLowerCase()!==found[1].password)return {ok:false,message:'口令不对。再看看对方给你的提示，日期和号码要保留开头的0。'};
+ const pass=String(password??'').normalize('NFKC').trim().toLowerCase();
+ if(found[0]==='azhe'&&pass==='0323')return {ok:false,message:'需补充校刊英文缩写，按“英文缩写＋月日”填写。'};
+ if(pass!==found[1].password)return {ok:false,message:'口令不对。再看看对方给你的提示，日期和号码要保留开头的0。'};
  return {ok:true,account:found[0],message:'登录成功。'};
 }
 export function unlockCaseFolder(state,password){if(!state.finished||state.caseStage<5)return {ok:false,message:'现在还没有这份资料夹。'};if(String(password??'').normalize('NFKC').replace(/\D/g,'').slice(-8).padStart(8,'0')!=='03281430')return {ok:false,message:'没有对上。口令是补测的月日，再接24小时制的开考时间。'};if(!state.folders.includes('makeup'))state.folders.push('makeup');return {ok:true,message:'资料夹已打开。'};}

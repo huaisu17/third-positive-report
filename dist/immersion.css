@@ -9,3 +9,5 @@
 @media(prefers-reduced-motion:reduce){.intranet-spinner{animation:none}.withdrawal-recovery .quoted-floor,.withdrawal-recovery .change-log,.clue-drawer[open],.scanline-fx.is-active{animation:none}.scanline-fx{display:none!important}.image-viewport>img{transform:none}.sticky-slip,.archive-evidence{transform:none!important}}
 
 .immersion-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.auto-read-hint{padding:10px 0;margin:0!important;font-size:11px;line-height:1.8;color:#88748f}#readerBody>.auto-read-hint{padding:10px 22px 0}
