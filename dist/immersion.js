@@ -1,10 +1,10 @@
-import {CASE_REQUIREMENTS,escapeHTML as esc} from './engine.js?v=32';
-import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=32';
+import {CASE_REQUIREMENTS,escapeHTML as esc} from './engine.js?v=33';
+import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=33';
 export const PRESENTATION_KEY='qinghe.presentation.v1';
 export function freshPresentation(){return {version:1,likes:[],reports:[],note:'',crossed:[],effects:true,seen:[]};}
 export function parsePresentation(raw){const s=freshPresentation();try{const x=JSON.parse(raw);if(!x||x.version!==1)return s;for(const key of ['likes','reports','crossed','seen'])if(Array.isArray(x[key]))s[key]=[...new Set(x[key].filter(v=>typeof v==='string'&&v.length<100))].slice(0,150);s.note=typeof x.note==='string'?x.note.slice(0,4000):'';s.effects=x.effects!==false;return s;}catch{return s;}}
 export function evidenceSlips(state,clues,archiveDocs){const confirmed=new Set(state.deduced?['post','source']:[]);for(let i=0;i<state.caseStage;i++)for(const id of CASE_REQUIREMENTS[i]||[])confirmed.add(id);if(state.caseStage>=4)confirmed.add('sameImage');const archiveConfirmed=new Set(EXP_EDGES.filter(e=>state.expansion.links.includes(edgeKey(e))).flatMap(e=>[e.from,e.to]));return [...state.clues.filter(id=>Object.hasOwn(clues,id)).map(id=>({id:'case:'+id,title:clues[id].title,text:clues[id].text,route:clues[id].route,confirmed:confirmed.has(id)})),...state.expansion.evidence.filter(id=>Object.hasOwn(archiveDocs,id)).map(id=>({id:'archive:'+id,title:archiveDocs[id].title,text:archiveDocs[id].summary,route:'#archive/'+id,confirmed:archiveConfirmed.has(id)}))];}
-export function shouldDelayRoute(hash,previous){if(hash===previous)return false;return ['chat','chats','accounts','locker','folder','staff-login','recover','mailbox','vault'].includes(String(hash).slice(1).split('/')[0]);}
+export function shouldDelayRoute(hash,previous){if(hash===previous)return false;return ['chat','chats','accounts','locker','folder','staff-login','recover','mailbox','vault','portal'].includes(String(hash).slice(1).split('/')[0]);}
 export function shouldRevealWithdrawal(state,id){return ['withdrawal','deleted'].includes(id)||id==='quote'&&state.caseStage>=6;}
 export function createImmersion({getState,clues,archiveDocs,chapters,archiveChapters,view,toast}){
  let prefs;try{prefs=parsePresentation(localStorage.getItem(PRESENTATION_KEY));}catch{prefs=freshPresentation();}

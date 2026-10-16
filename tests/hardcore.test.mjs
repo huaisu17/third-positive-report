@@ -44,7 +44,7 @@ test('all compound password props are reachable before login and no single prop 
  const s=freshState();s.deduced=true;s.finished=true;
  for(const [id,user,pass,doc,query,post,stage] of fixtures){s.caseStage=stage;assert.equal(caseDocs[doc].owner,'by');assert.ok(caseDocs[doc].stage<=stage);assert.ok(searchArchive(query,index,searchItems).results.some(x=>x.route==='#post/'+post));assert.doesNotMatch(caseDocs[doc].body,new RegExp(pass,'i'));assert.doesNotMatch(posts.find(x=>x.id===post).body,new RegExp(pass,'i'));assert.equal(checkAccountLogin(s,user,pass).account,id);}
  assert.match(caseDocs.pickup.body,/实际值日天数乘寝室门牌/);assert.match(posts.find(p=>p.id==='noodles').body,/四天.*316/);
- assert.match(caseDocs['sports-slip'].body,/2024年10月18日/);assert.match(posts.find(p=>p.id==='sports').body,/18日正式比赛换B机/);
+ assert.match(caseDocs['sports-slip'].body,/2024年10月18日/);assert.match(posts.find(p=>p.id==='sports').body,/BV1Qh4y1q7Hs/);assert.doesNotMatch(posts.find(p=>p.id==='sports').body,/正式比赛换B机/);
  for(const [user,wrong] of [['jiege','0367'],['jiege','1580'],['yida','1018'],['yida','A1018'],['yida','C1018'],['heshe','hs0323'],['heshe','hs032317']])assert.equal(checkAccountLogin(s,user,wrong).ok,false,wrong);
  assert.equal(checkAccountLogin(s,'heshe',' ＨＳ０３２３１６ ').account,'azhe');assert.match(checkAccountLogin(s,'heshe','0323').message,/需补充校刊英文缩写/);
 });
