@@ -380,7 +380,7 @@ export const docs={
     "kind": "report",
     "image": "assets/report-by-v3.svg",
     "source": "2025-03-15",
-    "text": "你的13C尿素呼气试验结果为阳性，日期是2025年3月15日。纸张左下有折痕，“阳性”旁有蓝笔圈画。",
+    "text": "你的C14尿素呼气试验结果为阳性，日期是2025年3月15日。纸张左下有折痕，“阳性”旁有蓝笔圈画。",
     "code": "A"
   },
   "wuji": {
@@ -390,7 +390,7 @@ export const docs={
     "kind": "report",
     "image": "assets/report-wuji-v3.svg",
     "source": "2025-03-18",
-    "text": "乌鸡的13C尿素呼气试验结果为阳性，日期是2025年3月18日。纸面平整，没有手写圈画。",
+    "text": "乌鸡的C14尿素呼气试验结果为阳性，日期是2025年3月18日。纸面平整，没有手写圈画。",
     "code": "B"
   },
   "unknown": {
