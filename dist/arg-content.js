@@ -1,8 +1,8 @@
-import {CLUES} from './engine.js?v=40';
-import {archiveDocs,cacheFragments} from './expansion-content.js?v=40';
-import {caseDocs} from './campaign.js?v=40';
-import {docs,chats,posts} from './content.js?v=40';
-import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=40';
+import {CLUES} from './engine.js?v=42';
+import {archiveDocs,cacheFragments} from './expansion-content.js?v=42';
+import {caseDocs} from './campaign.js?v=42';
+import {docs,chats,posts} from './content.js?v=42';
+import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=42';
 export const SPRING_BV='BV1Qh4y1p3Ct';
 export const AUTUMN_BV='BV1Qh4y1q7Hs';
 export const AUDIT_EDGES=EXP_EDGES.map(e=>({...e,key:edgeKey(e)}));

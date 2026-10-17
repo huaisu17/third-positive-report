@@ -1,6 +1,6 @@
-import {freshNetwork,parseNetwork} from './network-engine.js?v=40';
-import {NETWORK_CLUES} from './network-content.js?v=40';
-import {freshExpansion,parseExpansion} from './expansion-engine.js?v=40';
+import {freshNetwork,parseNetwork} from './network-engine.js?v=42';
+import {NETWORK_CLUES} from './network-content.js?v=42';
+import {freshExpansion,parseExpansion} from './expansion-engine.js?v=42';
 export const SAVE_KEY='qinghe.third-report.v1';
 export const CLUES={
  post:{id:'post',title:'原帖里的三份材料',code:'E03',text:'前两张是我和乌鸡的。最后一张是小号发来的，阿哲也不认识他。',route:'#post/reports'},

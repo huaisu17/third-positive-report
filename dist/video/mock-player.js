@@ -9,3 +9,13 @@ export function createMockPlayer({duration,starts,onTime,onPause,now=()=>perform
  function play(){if(playing){pause();return;}if(seconds>=duration)seconds=0;playing=true;stamp=now();const token=++generation;onTime(seconds,true,frameIndex(seconds,starts));timer=schedule(()=>{if(token!==generation)return;if(!canPlay()){pause();return;}const t=now();seconds=Math.min(duration,seconds+(t-stamp)/1000);stamp=t;onTime(seconds,true,frameIndex(seconds,starts));if(seconds>=duration)pause();},100);}
  return {play,pause,seek,dispose:pause,getTime:()=>seconds,isPlaying:()=>playing};
 }
+
+// Keyboard and small arrow buttons share exactly the same three-second step.
+export function stepPlayer(player,direction){player.seek(player.getTime()+direction*3);}
+export function handlePlayerKey(event,player,{blocked=false}={}){
+ if(!player||blocked||event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return false;
+ if(event.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"]),[role="textbox"],[role="slider"]'))return false;
+ if(event.code==='Space'||event.key===' '){if(event.target?.closest?.('button,a')||event.repeat)return false;event.preventDefault();player.play();return true;}
+ if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();stepPlayer(player,event.key==='ArrowLeft'?-1:1);return true;}
+ return false;
+}

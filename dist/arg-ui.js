@@ -1,13 +1,16 @@
-import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=40';
-import {EVIDENCE} from './arg-content.js?v=40';
-import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=40';
-import {createDwellCollector} from './auto-read.js?v=40';
-import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=40';
+import {mountCampusHeader} from './campus-header.js?v=42';
+import {bindExtractionFeedback} from './ui-interactions.js?v=42';
+import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=42';
+import {EVIDENCE} from './arg-content.js?v=42';
+import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=42';
+import {createDwellCollector} from './auto-read.js?v=42';
+import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=42';
 export {escapeHTML as esc,owned,canRead,truth,recordTable,tableCSV,downloadLocal};
 export const site=document.body.dataset.site||'forum';
 export const url=(to,params={})=>siteURL(to,params,site);
 export const asset=path=>(site==='forum'?'':'../')+path;
 export const params=()=>new URLSearchParams(location.search);
+mountCampusHeader(site);
 export const store=createStateStore();export const pocket=mountInvestigationDrawer(store,{site});
 let reading=[];const visibility=new Map();let observer;
 function stopReads(){for(const c of reading)c.cancel();reading=[];observer?.disconnect();visibility.clear();}
@@ -20,5 +23,5 @@ document.addEventListener('click',e=>{const target=e.target.closest('[data-evide
 export function sourceBody(body=''){return body.replace(/href="#([^"]+)"/g,(_all,raw)=>{const [section,id]=raw.split('/');const routes={chat:['forum',{thread:id==='chen'?'printing':'source'}],doc:['forum',{view:'doc',id:{by:'reportBy',wuji:'reportWuji',unknown:'reportUnknown',notebook:'diary'}[id]||id}],casefile:['forum',{view:'doc',id:Object.keys(EVIDENCE).find(k=>EVIDENCE[k].sourceDoc===id)||id}],post:['forum',{thread:id}],archive:[EVIDENCE[id]?.site||'pan',{view:id}],vault:['pan',{folder:'audit'}],accounts:['pan',{folder:id==='azhe'?'heshe':id||'accounts'}],folder:['pan',{folder:id||'makeup'}]};const match=section==='doc'&&['letter','score'].includes(id)?['pan',{folder:id==='letter'?'yida':'jie'}]:section==='doc'&&id==='paper'?['forum',{thread:'leave'}]:section==='portal'?id==='ledger'?['pan',{folder:'audit'}]:['canteen',{view:['order','card'].includes(id)?'card':id==='workorders'?'outage':id}]:routes[section]||['forum',{}];return 'href="'+url(match[0],match[1])+'"';});}
 export function evidenceArticle(id,{compact=false}={}){const d=EVIDENCE[id];if(!d||!canRead(store.get(),id))return '<div class="arg-locked"><h2>这份资料尚未获得授权</h2><p>请从原作者交给你的入口查阅。已有的其他材料仍可重读。</p></div>';return `<article class="arg-document"><header><small>${escapeHTML(d.code||'存档')} / 原始来源留存</small><h1>${escapeHTML(d.title)}</h1></header>${d.image?`<figure class="arg-image" data-evidence="${id}"><img src="${asset(d.image)}" alt="${escapeHTML(d.text||d.title)}" loading="eager"><figcaption>点击可疑材料或阅读片刻，调查本会自动记录。</figcaption></figure>`:''}<div class="arg-doc-text" ${d.image?'':`data-evidence="${id}"`}>${sourceBody(d.body||'<p>'+escapeHTML(d.text||'')+'</p>')}</div>${d.columns?`<div data-evidence="${id}">${recordTable(d,{key:id,interactive:true,selected:store.get().marks[id]?.value||[]})}</div><button type="button" data-export-evidence="${id}">下载原始表格CSV</button>`:''}${!compact?`<a class="arg-source-return" href="${url(d.site,d.params)}">回到资料出处 →</a>`:''}</article>`;}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-export-evidence]');if(b){const id=b.dataset.exportEvidence,d=EVIDENCE[id];if(d?.columns&&canRead(store.get(),id))downloadLocal(tableCSV(d),id+'_原始记录.csv');}const row=e.target.closest('[data-record-row]');if(row){const table=row.closest('[data-record-table]'),key=table.dataset.recordTable,radio=row.querySelector('input[type=radio]');if(radio){radio.checked=true;store.dispatch('mark',{table:key,rows:[row.dataset.recordRow]});}else if(row.querySelector('[data-row-toggle]')){const previous=store.get().marks[key]?.value||[],id=row.dataset.recordRow;store.dispatch('mark',{table:key,rows:previous.includes(id)?previous.filter(v=>v!==id):[...previous,id]});}table.querySelectorAll('[data-record-row]').forEach(r=>r.classList.toggle('record-selected',(store.get().marks[key]?.value||[]).includes(r.dataset.recordRow)));}});
-export function commandForm(form,type,makePayload=Object.fromEntries){form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form),r=store.dispatch(type,makePayload(data));pocket.feedback(r.message);const out=document.querySelector('[data-response]');if(out)out.textContent=r.message;});}
+export function commandForm(form,type,makePayload=Object.fromEntries){const extractionFeedback=type==='share'?bindExtractionFeedback(form):null;form.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form),r=store.dispatch(type,makePayload(data));pocket.feedback(r.message);if(extractionFeedback)extractionFeedback(r);else{const out=form.querySelector('[data-response]')||document.querySelector('[data-response]');if(out)out.textContent=r.message;}});}
 export function mountPage(render){let signature='';const refresh=()=>{const t=truth(store.get()),next=JSON.stringify([t,store.get().accounts,store.get().actions,!!store.get().vault]);if(next!==signature){const scroll=scrollY;signature=next;stopReads();render();watchReads();window.scrollTo({top:scroll,behavior:'auto'});}document.querySelectorAll('[data-evidence]').forEach(node=>node.classList.toggle('arg-collected',owned(store.get(),node.dataset.evidence)));};store.subscribe(refresh);refresh();window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});}

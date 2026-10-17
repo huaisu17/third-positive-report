@@ -1,7 +1,7 @@
-import {translateLegacy} from './legacy-entry.js?v=41';
-import {store,pocket,url,asset,params,sourceBody,evidenceArticle,commandForm,mountPage,esc,owned,truth} from './arg-ui.js?v=41';
-import {MATERIALS,SPRING_BV,AUTUMN_BV,EVIDENCE} from './arg-content.js?v=40';
-import {searchGuidance} from './investigation.js?v=40';
+import {translateLegacy} from './legacy-entry.js?v=42';
+import {store,pocket,url,asset,params,sourceBody,evidenceArticle,commandForm,mountPage,esc,owned,truth} from './arg-ui.js?v=42';
+import {MATERIALS,SPRING_BV,AUTUMN_BV,EVIDENCE} from './arg-content.js?v=42';
+import {searchGuidance} from './investigation.js?v=42';
 const app=document.querySelector('#app');
 if(location.hash){try{const legacy=translateLegacy(location.hash);if(legacy)location.replace(url(legacy.site,legacy.params));}catch{}}
 const rows={notice:['【公告】发帖前看一下，附件请先遮姓名','阿哲'],reports:['最近有三位同学查出幽门，整理一下就医经历','阿哲'],lights:['三楼水房的灯终于换了','路过的人'],lost:['谁把蓝皮语文笔记落讲台上了','陈叙'],noodles:['周末补一下夜宵账，谁的车仔面还没给钱','杰哥'],printing:['周一帮忙打印的同学，材料记得领走','陈叙'],exam:['这次周测作文有人写完了吗','益达'],sports:['运动会旧照片还有几袋没人领','阿哲'],leave:['补测登记：3月14日那场语文周测','林予'],source:['关于第三张投稿，补一句','阿哲'],chen:['关于那张报告，陈叙想说明几句','陈叙'],oldpost:['周五最后一首歌留给谁','栀子不是花茶'],radio:['广播站：九月晚自习排期存档','电台值班']};

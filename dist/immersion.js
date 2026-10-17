@@ -1,6 +1,6 @@
 // Legacy compatibility module: no production HTML entry loads this UI. Active pages use state-sync.js and qinghe_arg_save.
-import {CASE_REQUIREMENTS,escapeHTML as esc} from './engine.js?v=40';
-import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=40';
+import {CASE_REQUIREMENTS,escapeHTML as esc} from './engine.js?v=42';
+import {EXP_EDGES,edgeKey} from './expansion-engine.js?v=42';
 export const PRESENTATION_KEY='qinghe.presentation.v1';
 export function freshPresentation(){return {version:1,likes:[],reports:[],note:'',crossed:[],effects:true,seen:[]};}
 export function parsePresentation(raw){const s=freshPresentation();try{const x=JSON.parse(raw);if(!x||x.version!==1)return s;for(const key of ['likes','reports','crossed','seen'])if(Array.isArray(x[key]))s[key]=[...new Set(x[key].filter(v=>typeof v==='string'&&v.length<100))].slice(0,150);s.note=typeof x.note==='string'?x.note.slice(0,4000):'';s.effects=x.effects!==false;return s;}catch{return s;}}

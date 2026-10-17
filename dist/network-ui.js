@@ -1,14 +1,14 @@
 // Legacy compatibility module: no production HTML entry loads this UI. Active pages use state-sync.js and qinghe_arg_save.
-import {checkAccountLogin,escapeHTML as esc} from './engine.js?v=40';
-import {canAccessExpansionDoc} from './expansion-engine.js?v=40';
-import {archiveDocs} from './expansion-content.js?v=40';
-import {caseDocs} from './campaign.js?v=40';
-import {watchOriginalReading} from './original-reading.js?v=40';
-import {createDwellCollector} from './auto-read.js?v=40';
-import {RELAY_BV,CANTEEN_BV,VIDEOS,CARD_ROWS,RELAY_REGISTER,MAINTENANCE} from './network-content.js?v=40';
-import {canViewVideo,canUsePortal,canUseShare,authorizeCard,queryCard,openCardOrder,recordVideoFrame,unlockShare,routeFromAddress} from './network-engine.js?v=40';
-import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=40';
-import {videoScene} from './video-scene.js?v=40';
+import {checkAccountLogin,escapeHTML as esc} from './engine.js?v=42';
+import {canAccessExpansionDoc} from './expansion-engine.js?v=42';
+import {archiveDocs} from './expansion-content.js?v=42';
+import {caseDocs} from './campaign.js?v=42';
+import {watchOriginalReading} from './original-reading.js?v=42';
+import {createDwellCollector} from './auto-read.js?v=42';
+import {RELAY_BV,CANTEEN_BV,VIDEOS,CARD_ROWS,RELAY_REGISTER,MAINTENANCE} from './network-content.js?v=42';
+import {canViewVideo,canUsePortal,canUseShare,authorizeCard,queryCard,openCardOrder,recordVideoFrame,unlockShare,routeFromAddress} from './network-engine.js?v=42';
+import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=42';
+import {videoScene} from './video-scene.js?v=42';
 
 const clock=value=>`${String(Math.floor(value/60)).padStart(2,'0')}:${String(Math.floor(value%60)).padStart(2,'0')}`;
 const cardTable=rows=>({title:'一卡通消费明细',columns:['交易流水号','交易时间','窗口 / 机号','商品摘要','金额（元）','凭条号'],rows});

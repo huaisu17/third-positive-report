@@ -1,4 +1,4 @@
-import {SITES,VIDEOS,RELAY_BV,CANTEEN_BV,CARD_STUDENT,CARD_ROWS} from './network-content.js?v=40';
+import {SITES,VIDEOS,RELAY_BV,CANTEEN_BV,CARD_STUDENT,CARD_ROWS} from './network-content.js?v=42';
 const norm=v=>String(v??'').normalize('NFKC').trim().toLowerCase();
 export function siteForRoute(route){const section=String(route||'#forum').slice(1).split('/')[0];return section==='portal'?'portal':['video','dynamic'].includes(section)?'video':section==='pan'?'pan':'forum';}
 export function freshNetwork(){return {version:1,cardAuthorized:false,cardQuery:null,orderOpen:false,maintenanceSearch:{query:'',archived:false},complaintDraft:'',videoQuery:'',videoTimes:{},observed:[],panUnlocked:[],tableMarks:{},lastRoutes:Object.fromEntries(Object.entries(SITES).map(([id,s])=>[id,s.home]))};}

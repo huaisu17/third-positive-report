@@ -1,10 +1,10 @@
 // Legacy compatibility module: no production HTML entry loads this UI. Active pages use state-sync.js and qinghe_arg_save.
-import {recordTable} from './record-table.js?v=40';
-import {legacyNetworkRoute} from './network-engine.js?v=40';
-import {hintMarkup} from './investigation.js?v=40';
-import {EXP_STEPS,EXP_RELATIONS,EXP_EDGES,EXP_DOC_GATES,edgeKey,canAccessExpansionDoc,collectExpansionDoc,recoverStaffAccount,loginStaffAccount,solveExpansion,linkEvidence,chooseExpansionEnding} from './expansion-engine.js?v=40';
-import {archiveChapters,archiveDocs,cacheFragments,archiveHints,archiveEndings} from './expansion-content.js?v=40';
-import {decryptArchive,workbookBlob} from './archive-crypto.js?v=40';
+import {recordTable} from './record-table.js?v=42';
+import {legacyNetworkRoute} from './network-engine.js?v=42';
+import {hintMarkup} from './investigation.js?v=42';
+import {EXP_STEPS,EXP_RELATIONS,EXP_EDGES,EXP_DOC_GATES,edgeKey,canAccessExpansionDoc,collectExpansionDoc,recoverStaffAccount,loginStaffAccount,solveExpansion,linkEvidence,chooseExpansionEnding} from './expansion-engine.js?v=42';
+import {archiveChapters,archiveDocs,cacheFragments,archiveHints,archiveEndings} from './expansion-content.js?v=42';
+import {decryptArchive,workbookBlob} from './archive-crypto.js?v=42';
 
 export function createArchive({getState,save,view,heading,esc,toast,showReader,render}){
  let selected=[],fragments=[],decrypted=null,typingTimer,soundContext;

@@ -30,13 +30,13 @@ dist/archive-crypto.js          原PBKDF2 + AES-GCM与XLSX下载
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <link rel="stylesheet" href="../network.css?v=40">
-  <link rel="stylesheet" href="../arg.css?v=40">
+  <link rel="stylesheet" href="../network.css?v=42">
+  <link rel="stylesheet" href="../arg.css?v=42">
 </head>
 <body data-site="canteen">
   <main id="app" tabindex="-1"></main>
-  <script type="module" src="../state-sync.js?v=40"></script>
-  <script type="module" src="site.js?v=41"></script>
+  <script type="module" src="../state-sync.js?v=42"></script>
+  <script type="module" src="site.js?v=42"></script>
 </body>
 </html>
 ```
