@@ -3,7 +3,7 @@ export const HOME_POST_IDS=['notice','reports','lights','lost'];
 export const HISTORY_TOPICS={
  noodles:['夜宵','宵夜','账单','夜宵账','取餐','车仔面','火鸡面','杰哥'],
  exam:['周测','作文','语文','考试','益达'],
- printing:['打印','复印','委托','陈叙','校刊','禾声'],
+ printing:['打印','复印','委托','朱贵','校刊','禾声'],
  sports:['旧照片','老照片','合照','合影','运动会','照片','相片','益达']
 };
 const norm=v=>String(v??'').normalize('NFKC').trim().toLowerCase().replace(/[\s\p{P}\p{S}]/gu,'');

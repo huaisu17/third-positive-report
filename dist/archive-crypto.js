@@ -1,3 +1,4 @@
+import {normalizeSavedWorkbook} from './cast-compat.js?v=43';
 const bytes=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 export async function decryptArchive(envelope,password){
  if(!globalThis.crypto?.subtle)throw new Error('当前浏览器无法解密，请使用现代浏览器通过HTTPS打开。');
@@ -9,4 +10,4 @@ export async function decryptArchive(envelope,password){
  if(!Array.isArray(result.rows)||!Array.isArray(result.columns)||typeof result.xlsx!=='string')throw new Error('附件内容不完整。');
  return result;
 }
-export function workbookBlob(payload){return new Blob([bytes(payload.xlsx)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}
+export function workbookBlob(payload){return new Blob([bytes(normalizeSavedWorkbook(payload).xlsx)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});}

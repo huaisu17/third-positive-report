@@ -19,7 +19,7 @@ const envelope=JSON.parse(fs.readFileSync(new URL('../dist/assets/L-0313.enc.jso
 
 test('four independently bootable HTML documents load their own entry script and no pseudo desktop or chapter runtime',()=>{
  const entries=[['index.html','forum.js'],['canteen/index.html','site.js'],['video/index.html','site.js'],['pan/index.html','site.js']];
- for(const [path,script]of entries){const html=fs.readFileSync(new URL('../dist/'+path,import.meta.url),'utf8');assert.match(html,/<main id="app"/);assert.ok(html.includes(`src="${script}?v=42"`));assert.doesNotMatch(html,/data-site-switch|appWindow|window-titlebar|addressForm|src="app\.js/);const base=new URL('../dist/'+path,import.meta.url);for(const [,url]of html.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^\"]*)?"/g))if(!url.includes('://'))assert.ok(fs.existsSync(new URL(url,base)),path+' '+url);}
+ for(const [path,script]of entries){const html=fs.readFileSync(new URL('../dist/'+path,import.meta.url),'utf8');assert.match(html,/<main id="app"/);assert.ok(html.includes(`src="${script}?v=43"`));assert.doesNotMatch(html,/data-site-switch|appWindow|window-titlebar|addressForm|src="app\.js/);const base=new URL('../dist/'+path,import.meta.url);for(const [,url]of html.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^\"]*)?"/g))if(!url.includes('://'))assert.ok(fs.existsSync(new URL(url,base)),path+' '+url);}
  const from=['forum','canteen','video','pan'];for(const origin of from)for(const target of from){const rel=siteURL(target,{view:'test'},origin),base=new URL(origin==='forum'?'https://x.test/project/index.html':`https://x.test/project/${origin}/index.html`);assert.equal(new URL(rel,base).pathname,'/project/'+(target==='forum'?'index.html':target+'/index.html'));assert.ok(!rel.startsWith('/'));}
  for(const id of Object.keys(EVIDENCE)){const d=EVIDENCE[id];assert.ok(from.includes(d.site),id);const target=siteURL(d.site,d.params,'pan');assert.ok(target.includes('index.html'),id);}
 });
@@ -38,7 +38,7 @@ test('first truth needs independent identity, original submission, printing cont
 });
 
 test('new spring video aligns with March absence; autumn photo puzzle keeps its original year',()=>{
- assert.equal(CLIPS[SPRING_BV].danmaku.length,9);assert.equal(CLIPS[AUTUMN_BV].danmaku.length,8);assert.match(CLIPS[SPRING_BV].danmaku.find(d=>d.at===84).text,/陈叙.*打印机/);
+ assert.equal(CLIPS[SPRING_BV].danmaku.length,9);assert.equal(CLIPS[AUTUMN_BV].danmaku.length,8);assert.match(CLIPS[SPRING_BV].danmaku.find(d=>d.at===84).text,/朱贵.*打印机/);
  for(const clip of Object.values(CLIPS))for(let i=1;i<=4;i++){const src=fs.readFileSync(new URL(`../dist/video/frames/${clip.prefix}-0${i}.svg`,import.meta.url),'utf8');assert.match(src,clip.id===SPRING_BV?/2025.03.14/:/2024.10.18/);assert.ok(Buffer.byteLength(src)<18000);if(i===3&&clip.id===SPRING_BV)assert.match(src,/QH-P02 打印机|学生会器材处 XSH/);}
  assert.equal(frameIndex(0,[0,26,78,108]),0);assert.equal(frameIndex(84,[0,26,78,108]),2);assert.equal(frameIndex(132,[0,26,78,108]),3);assert.equal(danmakuAt(CLIPS[SPRING_BV].danmaku,84).some(d=>d.at===84),true);assert.equal(danmakuAt(CLIPS[SPRING_BV].danmaku,92).some(d=>d.at===84),false);
 });

@@ -1,10 +1,10 @@
-import {mountCampusHeader} from './campus-header.js?v=42';
-import {bindExtractionFeedback} from './ui-interactions.js?v=42';
-import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=42';
-import {EVIDENCE} from './arg-content.js?v=42';
-import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=42';
-import {createDwellCollector} from './auto-read.js?v=42';
-import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=42';
+import {mountCampusHeader} from './campus-header.js?v=43';
+import {bindExtractionFeedback} from './ui-interactions.js?v=43';
+import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=43';
+import {EVIDENCE} from './arg-content.js?v=43';
+import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=43';
+import {createDwellCollector} from './auto-read.js?v=43';
+import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=43';
 export {escapeHTML as esc,owned,canRead,truth,recordTable,tableCSV,downloadLocal};
 export const site=document.body.dataset.site||'forum';
 export const url=(to,params={})=>siteURL(to,params,site);

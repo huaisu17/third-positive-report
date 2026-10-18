@@ -1,5 +1,5 @@
-import {ARG_SAVE_KEY,freshArgState,sanitizeArgState,mergeArgStates,sameState,migrateLegacy,act} from './arg-engine.js?v=42';
-import {mountPinboard} from './arg-pinboard.js?v=42';
+import {ARG_SAVE_KEY,freshArgState,sanitizeArgState,mergeArgStates,sameState,migrateLegacy,act} from './arg-engine.js?v=43';
+import {mountPinboard} from './arg-pinboard.js?v=43';
 export {ARG_SAVE_KEY};
 // Every active page writes this one document. Legacy keys are read once only.
 export function createStateStore({storage,events=globalThis.window,actor=globalThis.crypto?.randomUUID?.()||'tab-'+Math.random().toString(36).slice(2)}={}){

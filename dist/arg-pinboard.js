@@ -1,7 +1,7 @@
-import {bindNotebookFeedback} from './ui-interactions.js?v=42';
-import {hintsFor} from './arg-hints.js?v=42';
-import {EVIDENCE,AUDIT_EDGES} from './arg-content.js?v=42';
-import {owned,truth,truthy,siteURL,escapeHTML as esc} from './arg-engine.js?v=42';
+import {bindNotebookFeedback} from './ui-interactions.js?v=43';
+import {hintsFor} from './arg-hints.js?v=43';
+import {EVIDENCE,AUDIT_EDGES} from './arg-content.js?v=43';
+import {owned,truth,truthy,siteURL,escapeHTML as esc} from './arg-engine.js?v=43';
 export function mountPinboard(store,{site}){
  let selected=[],draft='',returnFocus=null,hintDepth=-1,hintContext='';const shell=document.createElement('div');shell.className='arg-pocket';shell.innerHTML='<button type="button" class="arg-pocket-toggle" aria-controls="argNotebook" aria-expanded="false">▤ 随身调查本 <b data-pocket-count>0</b><span class="arg-unread-dot" aria-hidden="true"></span></button><dialog id="argNotebook" class="arg-notebook" aria-labelledby="argNotebookTitle"><header><div><small>高三 / 随堂记录</small><h2 id="argNotebookTitle">by的错题本</h2></div><button type="button" data-pocket-close aria-label="合上调查本">×</button></header><div class="arg-notebook-body"></div></dialog><div class="arg-small-toast" role="status" aria-live="polite"></div>';document.body.append(shell);const dialog=shell.querySelector('dialog'),body=shell.querySelector('.arg-notebook-body'),toggle=shell.querySelector('.arg-pocket-toggle'),toastNode=shell.querySelector('.arg-small-toast');let timer;
  function feedback(message){clearTimeout(timer);toastNode.textContent=message;toastNode.classList.add('show');timer=setTimeout(()=>toastNode.classList.remove('show'),2800);}

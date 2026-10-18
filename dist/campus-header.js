@@ -1,4 +1,4 @@
-import {siteURL} from './arg-engine.js?v=42';
+import {siteURL} from './arg-engine.js?v=43';
 const sites=[['forum','青禾论坛'],['canteen','智慧后勤'],['video','校园视频'],['pan','青禾网盘']];
 export function campusHeaderMarkup(site){
  const prefix=site==='forum'?'':'../';

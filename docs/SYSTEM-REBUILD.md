@@ -30,13 +30,13 @@ dist/archive-crypto.js          原PBKDF2 + AES-GCM与XLSX下载
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <link rel="stylesheet" href="../network.css?v=42">
-  <link rel="stylesheet" href="../arg.css?v=42">
+  <link rel="stylesheet" href="../network.css?v=43">
+  <link rel="stylesheet" href="../arg.css?v=43">
 </head>
 <body data-site="canteen">
   <main id="app" tabindex="-1"></main>
-  <script type="module" src="../state-sync.js?v=42"></script>
-  <script type="module" src="site.js?v=42"></script>
+  <script type="module" src="../state-sync.js?v=43"></script>
+  <script type="module" src="site.js?v=43"></script>
 </body>
 </html>
 ```
@@ -53,7 +53,7 @@ flowchart TD
   F -->|缩写、日期、期号组合| H[pan/index.html?folder=heshe]
   H -->|收稿原件排除误选| C[index.html?view=compare]
   PF --> C
-  C -->|证据齐全后追问| L1[index.html?thread=chen 陈叙说明]
+  C -->|证据齐全后追问| L1[index.html?thread=chen 朱贵说明]
   L1 -->|垃圾桶复查单疑点、本人授权| Z[pan/index.html?folder=clinic]
   Z -->|首次值班旧帖和广播末曲| R[密保阅览]
   R --> M[复查回执、PPI记录]
@@ -87,9 +87,9 @@ flowchart TD
 
 ## 三层事实与非线性依赖
 
-春季片段拍摄于2025年3月14日下午，对应陈叙的周测缺席及请假说法。2024年秋季片段只用于机位/照片谜题，不拿它证明次年三月行踪。
+春季片段拍摄于2025年3月14日下午，对应朱贵的周测缺席及请假说法。2024年秋季片段只用于机位/照片谜题，不拿它证明次年三月行踪。
 
-第一层要求报告A/C、阿哲来源、打印委托、原始收稿、请假说法、春季关键帧和交接场记，并核对独特纸面痕迹。弹幕与远景本身不能识别身份或证明改图；原件、接触及本人说明补足闭环。
+第一层要求报告A/C、飞星来源、打印委托、原始收稿、请假说法、春季关键帧和交接场记，并核对独特纸面痕迹。弹幕与远景本身不能识别身份或证明改图；原件、接触及本人说明补足闭环。
 
 第二层分别核对到场、医疗并恢复草稿。三个分支可交错。R07初检准备不足，复查经医生确认；R09另有复查阳性送达，R12仍待复查不列为确诊。后出汇总遗漏先到的后续材料，能证明漏列，不能证明共同传播来源。
 
