@@ -30,13 +30,13 @@ dist/archive-crypto.js          原PBKDF2 + AES-GCM与XLSX下载
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <link rel="stylesheet" href="../network.css?v=43">
-  <link rel="stylesheet" href="../arg.css?v=43">
+  <link rel="stylesheet" href="../network.css?v=44">
+  <link rel="stylesheet" href="../arg.css?v=44">
 </head>
 <body data-site="canteen">
   <main id="app" tabindex="-1"></main>
-  <script type="module" src="../state-sync.js?v=43"></script>
-  <script type="module" src="site.js?v=43"></script>
+  <script type="module" src="../state-sync.js?v=44"></script>
+  <script type="module" src="site.js?v=44"></script>
 </body>
 </html>
 ```
@@ -137,3 +137,7 @@ flowchart TD
 `npm run check`包含旧回归和新架构验证：物理入口与相对资源、模块导出、证据前提、不同探索顺序、实际解密、五条质疑、A后继续补证、storage并发收敛/墓碑、损坏存档、迁移、年份和播放生命周期。
 
 GitHub Actions仍校验后发布 `dist`，无需后端、依赖安装、重写规则或环境变量。GitHub Pages的HTTPS满足WebCrypto。当前验证涵盖逻辑、控制器和静态资源，不代替浏览器实机视觉验收。
+
+## v3.0.3 调查书签
+
+四站不挂载公共导航页头。`state-sync.js`挂载调查本后监听首次访问及正文内的本地站点链接；`site-address.js`只解析游戏站点，`arg-bookmarks.js`渲染已发现书签及直达框。`qinghe_arg_save.discovered_sites`初始为`["forum"]`，合并时取四个有效站点的有序并集。v3.0.2及以前的存档仅从已收录材料、既有授权和视频位置恢复曾用入口，不按剧情层级直接开放所有站点。原有身份、证据及解密权限照旧校验。

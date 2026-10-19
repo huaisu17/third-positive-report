@@ -1,5 +1,5 @@
-import {translateLegacy} from './legacy-entry.js?v=43';
-import {store,pocket,url,asset,params,sourceBody,evidenceArticle,commandForm,mountPage,esc,owned,truth} from './arg-ui.js?v=43';
+import {translateLegacy} from './legacy-entry.js?v=44';
+import {store,pocket,url,asset,params,sourceBody,evidenceArticle,commandForm,mountPage,esc,owned,truth} from './arg-ui.js?v=44';
 import {MATERIALS,SPRING_BV,AUTUMN_BV,EVIDENCE} from './arg-content.js?v=43';
 import {searchGuidance} from './investigation.js?v=43';
 const app=document.querySelector('#app');

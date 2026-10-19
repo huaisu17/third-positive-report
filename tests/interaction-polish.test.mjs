@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {campusHeaderMarkup,mountCampusHeader} from '../dist/campus-header.js';
+import {bookmarkLinks} from '../dist/arg-bookmarks.js';
+import fs from 'node:fs';
 import {bindNotebookFeedback,bindExtractionFeedback} from '../dist/ui-interactions.js';
 import {createMockPlayer,handlePlayerKey,stepPlayer} from '../dist/video/mock-player.js';
 
@@ -16,11 +17,12 @@ function notebook(){const dialog=new Element(),toggle=new Element();let closes=0
 function player(){let now=0,next=0;const jobs=new Map();const p=createMockPlayer({duration:132,starts:[0,28,84,112],onTime(){},now:()=>now,schedule:fn=>{jobs.set(++next,fn);return next;},cancel:id=>jobs.delete(id),canPlay:()=>true});return {p,tick(){now+=1000;[...jobs.values()].forEach(fn=>fn());},jobs};}
 function key(key,options={}){return {key,target:{closest:()=>null},preventDefault(){this.prevented=true;},...options};}
 
-test('campus navigation keeps all sixteen links in the GitHub project directory and marks the current site',()=>{
- for(const from of ['forum','canteen','video','pan']){const base=new URL(from==='forum'?'https://example.test/game/index.html':`https://example.test/game/${from}/index.html`),html=campusHeaderMarkup(from);assert.match(html,/校园内网已连接/);assert.match(html,/alt="青禾校徽"/);assert.equal((html.match(/aria-current="page"/g)||[]).length,1);const navigation=html.split('<nav')[1];const links=[...navigation.matchAll(/href="([^"]+)"/g)].map(m=>new URL(m[1],base).pathname);assert.deepEqual(links,['/game/index.html','/game/canteen/index.html','/game/video/index.html','/game/pan/index.html']);const image=html.match(/src="([^"]+)"/)[1];assert.equal(new URL(image,base).pathname,'/game/assets/favicon.svg');}
+test('notebook bookmarks expose only discovered sites and retain project-relative links for all four documents',()=>{
+ for(const site of ['forum','canteen','video','pan']){const initial=bookmarkLinks({discovered_sites:['forum']},site);assert.equal((initial.match(/<a /g)||[]).length,1);assert.doesNotMatch(initial,/智慧后勤|视频镜像|网盘/);const base=new URL(site==='forum'?'https://x.test/game/index.html':`https://x.test/game/${site}/index.html`),html=bookmarkLinks({discovered_sites:['forum','canteen','video','pan']},site);assert.equal((html.match(/aria-current="page"/g)||[]).length,1);assert.deepEqual([...html.matchAll(/href="([^"]+)"/g)].map(m=>new URL(m[1],base).pathname),['/game/index.html','/game/canteen/index.html','/game/video/index.html','/game/pan/index.html']);}
 });
-test('shared campus header mounts before site content only once',()=>{
- let mounted=null,count=0;const doc={querySelector:()=>mounted,createElement:()=>({}),body:{prepend(node){mounted=node;count++;}}};mountCampusHeader('video',doc);mountCampusHeader('video',doc);assert.equal(count,1);assert.equal(mounted.className,'campus-header');assert.match(mounted.innerHTML,/校园视频/);
+test('all site entries keep native mastheads without mounting the removed campus header',()=>{
+ for(const path of ['index.html','canteen/index.html','video/index.html','pan/index.html','arg-ui.js','arg.css'])assert.doesNotMatch(fs.readFileSync(new URL('../dist/'+path,import.meta.url),'utf8'),/campus-header|mountCampusHeader|campus-network/);
+ assert.match(fs.readFileSync(new URL('../dist/arg-pinboard.js',import.meta.url),'utf8'),/mountBookmarks/);
 });
 test('outside notebook click closes, inside click and drag from inside do not dismiss',()=>{
  const n=notebook();n.dialog.fire('click',{clientX:900,clientY:300});assert.equal(n.closes(),0);n.dialog.fire('pointerdown',{clientX:900,clientY:300});n.dialog.fire('click',{clientX:400,clientY:300});assert.equal(n.closes(),0);n.dialog.fire('pointerdown',{clientX:400,clientY:300});n.dialog.fire('click',{clientX:400,clientY:300});assert.equal(n.closes(),1);n.dialog.fire('click',{clientX:400,clientY:300});assert.equal(n.closes(),1);

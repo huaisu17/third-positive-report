@@ -1,8 +1,7 @@
-import {mountCampusHeader} from './campus-header.js?v=43';
 import {bindExtractionFeedback} from './ui-interactions.js?v=43';
-import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=43';
+import {createStateStore,mountInvestigationDrawer} from './state-sync.js?v=44';
 import {EVIDENCE} from './arg-content.js?v=43';
-import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=43';
+import {canRead,owned,truth,siteURL,escapeHTML} from './arg-engine.js?v=44';
 import {createDwellCollector} from './auto-read.js?v=43';
 import {recordTable,tableCSV,downloadLocal} from './record-table.js?v=43';
 export {escapeHTML as esc,owned,canRead,truth,recordTable,tableCSV,downloadLocal};
@@ -10,7 +9,6 @@ export const site=document.body.dataset.site||'forum';
 export const url=(to,params={})=>siteURL(to,params,site);
 export const asset=path=>(site==='forum'?'':'../')+path;
 export const params=()=>new URLSearchParams(location.search);
-mountCampusHeader(site);
 export const store=createStateStore();export const pocket=mountInvestigationDrawer(store,{site});
 let reading=[];const visibility=new Map();let observer;
 function stopReads(){for(const c of reading)c.cancel();reading=[];observer?.disconnect();visibility.clear();}
