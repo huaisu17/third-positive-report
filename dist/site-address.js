@@ -1,4 +1,4 @@
-import {CLIPS} from './arg-content.js?v=43';
+import {CLIPS} from './arg-content.js?v=46';
 export const SITE_IDS=['forum','canteen','video','pan'];
 export const SITE_NAMES={forum:'青禾论坛',canteen:'智慧后勤与一卡通',video:'青禾校园视频镜像',pan:'青禾网盘'};
 export const normalizeSites=value=>SITE_IDS.filter(id=>id==='forum'||Array.isArray(value)&&value.includes(id));

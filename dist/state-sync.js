@@ -1,6 +1,6 @@
-import {siteForLocalLink,SITE_NAMES} from './site-address.js?v=44';
-import {ARG_SAVE_KEY,freshArgState,sanitizeArgState,mergeArgStates,sameState,migrateLegacy,act} from './arg-engine.js?v=44';
-import {mountPinboard} from './arg-pinboard.js?v=44';
+import {siteForLocalLink,SITE_NAMES} from './site-address.js?v=46';
+import {ARG_SAVE_KEY,freshArgState,sanitizeArgState,mergeArgStates,sameState,migrateLegacy,act} from './arg-engine.js?v=46';
+import {mountPinboard} from './arg-pinboard.js?v=46';
 export {ARG_SAVE_KEY};
 // Every active page writes this one document. Legacy keys are read once only.
 export function createStateStore({storage,events=globalThis.window,actor=globalThis.crypto?.randomUUID?.()||'tab-'+Math.random().toString(36).slice(2)}={}){
@@ -20,4 +20,4 @@ export function trackSiteDiscovery(store,{site,document:doc=document,window:win=
  const visit=event=>{if(event.defaultPrevented||event.type==='click'&&event.button>0||event.type==='auxclick'&&event.button!==1)return;const link=event.target?.closest?.('a[href]');if(!link||link.hasAttribute('download'))return;const original=link.getAttribute('href'),target=siteForLocalLink(original,{site,currentURL:win.location.href});if(!target)return;const added=!store.get().discovered_sites.includes(target);store.dispatch('discover',{site:target});if(added){const url=new URL(original,win.location.href);url.hash='site-added='+target;link.setAttribute('href',url.href);setTimeout(()=>link.setAttribute('href',original),0);}};
  doc.addEventListener('click',visit);doc.addEventListener('auxclick',visit);return ()=>{doc.removeEventListener('click',visit);doc.removeEventListener('auxclick',visit);};
 }
-export function mountInvestigationDrawer(store,{site=document.body.dataset.site||'forum'}={}){const pocket=mountPinboard(store,{site});trackSiteDiscovery(store,{site,onArrival:pocket.feedback});return pocket;}
+export function mountInvestigationDrawer(store,{site=document.body.dataset.site||'forum'}={}){const pocket=mountPinboard(store,{site});trackSiteDiscovery(store,{site,onArrival:pocket.highlight});return pocket;}

@@ -27,6 +27,15 @@ Object.assign(EVIDENCE,{
  diary:{...EVIDENCE.diary,body:docs.notebook?.description||'<p>益达3月11日拉过肚子，后来查过，说没有查出幽门。by没带纸那件事是by自己中午讲的，不能当成只有益达才知道的秘密。</p>'},
  auditReview:{id:'auditReview',code:'A05',title:'出具单位、设备与财务复核回函',text:'原单存根、停电工单和付款凭证完成复核。结论针对失实验收与漏列，不认定传播来源。',site:'pan',params:{folder:'review'},access:'auditReview'}
 });
+Object.assign(EVIDENCE,{
+ forumSnapshot:{id:'forumSnapshot',code:'Q0325-07',title:'Q0325-07：7楼引用留存',text:'飞星保存的引用副本，留存于3月25日18:42，早于版主屏蔽和作者撤回。',site:'pan',params:{folder:'snapshots'},access:'public',body:'<p>文件：Q0325-07_引用留存.html · 留存人：飞星</p><p>原楼层：03-25 12:36，早睡观察员。</p><blockquote>不是说两页复印件都夹在语文卷最后面了吗，拿出来看日期就知道了。老绕着吃面说干什么。</blockquote><p>03-25 18:42：引用副本保存。03-26 18:33：版主暂时屏蔽。03-28 12:15：原作者撤回。三项操作并不是一回事。</p><p>这份副本只能核对当时说过什么，不包含账号实名，也不能凭一个昵称认人。原发言提到的打印资料，还要和委托记录对照。</p>'},
+ routingMemo:{id:'routingMemo',code:'JK-0330-07-R',title:'医务室收文转交页（复印）',text:'JK-0330-07的转交时间为3月30日16:20；遮盖层下保留着原文字。需与签收和汇总原件核对。',site:'pan',params:{folder:'clinic',file:'routingMemo'},access:'clinic',manualRead:true,body:'<p>小范留存 / 仅限本次核查 / 转交页JK-0330-07-R</p><p>收文号：JK-0330-07。去标识副本转交至健康资料汇总岗。</p><p>转交时间：<span class="arg-redacted" role="button" tabindex="0" aria-expanded="false" aria-label="涂黑的转交时间" data-redaction="routingMemo">03月30日 16:20</span></p><p>扫描备注：副本用文字底色遮盖了部分栏目，未重新生成图像；签收内容以原件为准。</p><p>同批签收记录仍在复查回执中，4月1日的汇总底稿另存于后勤资料。转交页不包含患者姓名，也不用于确定感染来源。</p>'}
+});
+Object.assign(EVIDENCE,{
+ clockNote:{id:'clockNote',code:'BBS-L21',title:'水房回帖：后门机的两分钟',text:'13日后门终端QH-HM01屏显快两分钟；那批导出已按设备登记校正，不能再减一次。',site:'forum',params:{thread:'lights'},access:'public',body:'<p>不用给我留饭：灯亮了总算能看见拖把桶了。顺便问一句，13号后门那台刷卡机的时间还修不修？我看它比铃声快两分钟。</p><p>路过的人：师傅登记的是QH-HM01。他说那天屏幕快两分钟，那批导出会校回服务器时间，别拿屏幕照片直接比，也别看导出时又减一遍。我上回就是这么多扣了一次，白跟人争半天。</p>'},
+ screenMemory:{id:'screenMemory',code:'BBS-R05',title:'杰哥记得的后门屏显',text:'杰哥记得13日晚后门屏显20:43、有一次周转交接；他说没看清办理人，时间是看屏幕记的。',site:'forum',params:{thread:'reports'},access:'public',body:'<p>杰哥：你们一直问时间，我想起13号晚自习中间去接水，看见后门有人办周转，那台屏幕是20:43。单子上R0313几个字倒挺大。我记时间应该不会差。</p><p>by：谁在那里？</p><p>杰哥：背影我哪认得。时间是抬头看屏幕记的，不是看表。你别替我补个人进去。</p>'}
+});
+EVIDENCE.swipe.body+='<p>后门终端机号QH-HM01。导出“日期时间”采用服务器基准，已应用当日设备偏差登记；现场屏显与本表不是同一时间基准。校时情况曾在水房维修回帖中说明。</p>';
 EVIDENCE.medical.body+='<p>另两份去标识送达记录：R09于3月30日经医生确认复查阳性、3月31日送达；R12仍待复查，不列为已确认阳性。它们和R07一起出现在医务室交接册，不能继续写“无新增待核”。</p>';
 export const MATERIALS={caseDocs,archiveDocs,cacheFragments,posts};
 export const CLIPS={

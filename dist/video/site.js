@@ -1,5 +1,5 @@
-import {store,pocket,url,asset,params,mountPage,esc,watchReads} from '../arg-ui.js?v=44';
-import {CLIPS,SPRING_BV,AUTUMN_BV} from '../arg-content.js?v=43';
+import {store,pocket,url,asset,params,mountPage,esc,watchReads} from '../arg-ui.js?v=46';
+import {CLIPS,SPRING_BV,AUTUMN_BV} from '../arg-content.js?v=46';
 import {createMockPlayer,danmakuAt,displayTime,stepPlayer,handlePlayerKey} from './mock-player.js?v=43';
 const app=document.querySelector('#app');let controller=null,lastFrame=-1,lastTime=0;
 function render(){controller?.dispose();controller=null;const p=params(),id=p.get('bv'),query=p.get('q')||'';if(!id){const results=Object.values(CLIPS).filter(v=>query&&[v.id,v.title,v.up].some(x=>x.toLowerCase().includes(query.toLowerCase())));app.innerHTML=`<div class="video-site"><header class="video-top"><a class="video-brand" href="index.html">▣ 哔哩哔哩 <small>青禾校园镜像</small></a><form method="get" action="index.html"><input name="q" value="${esc(query)}" placeholder="视频标题、UP主或BV号" aria-label="镜像搜索"><button>搜索</button></form></header><div class="arg-video-results"><h1>校园影像存档</h1>${results.map(v=>`<a href="index.html?bv=${v.id}"><img src="frames/${v.prefix}-01.svg" alt="视频封面"><h2>${esc(v.title)}</h2><small>${v.date} · ${v.id}</small></a>`).join('')||'<p>从原帖记下视频编号，可以在这里查询。上传时间和现场拍摄时间分别保留。</p>'}</div></div>`;return;}

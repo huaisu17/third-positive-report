@@ -1,5 +1,5 @@
-import {SITE_NAMES,normalizeSites,resolveSiteAddress} from './site-address.js?v=44';
-import {siteURL,escapeHTML as esc} from './arg-engine.js?v=44';
+import {SITE_NAMES,normalizeSites,resolveSiteAddress} from './site-address.js?v=46';
+import {siteURL,escapeHTML as esc} from './arg-engine.js?v=46';
 export function bookmarkLinks(state,site){return normalizeSites(state.discovered_sites).map(id=>`<a href="${siteURL(id,{},site)}"${id===site?' aria-current="page"':''}>${esc(SITE_NAMES[id])}${id===site?'<small>当前页面</small>':''}</a>`).join('');}
 export function mountBookmarks(store,{container,site,navigate=href=>location.assign(href),currentURL=location.href}){
  container.innerHTML='<summary>🌐 调查书签 / 站点跳转 <small data-bookmark-count></small></summary><div class="arg-bookmark-panel"><form data-pocket-address><label for="argDirectAddress">地址 / BV号 / 内网直达<input id="argDirectAddress" name="address" type="text" maxlength="500" placeholder="粘贴地址、BV号或已知站点名称" autocomplete="off" spellcheck="false" aria-describedby="argDirectResult"></label><button type="submit">直达 →</button><p id="argDirectResult" data-address-result role="status" aria-live="polite"></p></form><nav data-bookmark-links aria-label="已发现的调查站点"></nav><p class="arg-bookmark-note">只记下你已经找到的入口。</p></div>';
