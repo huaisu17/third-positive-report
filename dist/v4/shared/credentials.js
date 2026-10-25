@@ -1,0 +1,2 @@
+import {normalize} from './registry.js';
+export function testCredential(group,input){const value=normalize(input).replace(/\s+/g,'');if(group==='editor'){if(value==='0323')return {ok:false,message:'需补充校刊英文缩写及当周期号。'};if(value==='hs032317')return {ok:false,message:'这不是本期阅览凭证。请区分本周校对与下期预告。'};return value==='hs032316'?{ok:true,message:'已取得校刊共用阅览权限。'}:{ok:false,message:'凭证不匹配。共享说明中有格式，日期和期号在本周资料中。'};}if(group==='sports')return value==='0321b'?{ok:true,message:'共享相册已打开。'}:{ok:false,message:'提取码不匹配。拍摄登记与上传日期不是同一个字段。'};return {ok:false,message:'没有这个共享范围。'};}

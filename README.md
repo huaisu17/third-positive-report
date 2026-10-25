@@ -1,11 +1,38 @@
-# 第三份阳性报告 · v3.2
+# 第三份阳性报告 · v4.0 P1候选 / v3.2保留
+
+v4重制目前交付P0设计冻结和P1可试玩候选样章。六位真实测试者由项目发起人安排，反馈通过后才进入P2全剧本，不把自动化回归当作盲测结果。
+
+- 候选入口：`dist/v4/index.html`，部署后为 `/third-positive-report/v4/`。
+- 旧版入口：`dist/index.html`，v3.2仍可回看，新旧战役进度隔离。
+- [制作档案](docs/v4/README.md)包含完整事实、人物知情矩阵、十二谜题与视觉手册（解答有剧透）。
+- [无剧透盲测包](docs/v4/PLAYTEST.md)，候选页调查本“提示/备份”也可打开在线说明。
+
+## 新版工程验证
+
+```sh
+npm ci
+npm run check
+npx playwright install --with-deps
+npm run test:browser
+npm run serve
+```
+
+页面无运行时依赖、无需后端；Playwright仅为开发测试依赖。四个物理站点通过相对超链接访问，适配GitHub Pages项目子目录。本地开发须HTTP localhost，部署须HTTPS以支持WebCrypto。首屏图片按需加载，本地48秒相册短片不伪装连续录像，有字幕和逐图替代。
+
+`qinghe_arg_save`仍是唯一活动存档。新版封套保留旧版可读投影，并隔离新战役；旧原始字符串不可变归档，IndexedDB及校验快照用于旧标签覆盖后的恢复。导入/导出带校验和，恢复文件携带的旧档也可单独导出。[存档协议](docs/v4/ENGINEERING.md)
+
+GitHub Actions先执行旧版+新版检查和Chromium/Firefox/WebKit四站交互，再部署`dist`。三引擎结果与截图作为工作流附件保留14天。真人盲测、商业作品实机评审和完整作品时长验收仍待完成。
+
+---
+
+# 旧版 v3.2 说明
 
 中文校园 Web ARG。四套独立 HTML 使用真实相对链接往返，分别呈现经典论坛、蓝白后勤、粉白视频镜像与班级网盘。
 
-- `dist/index.html`：争议原帖、历史检索、打印委托、图像比对与陈叙说明。
+- `dist/index.html`：争议原帖、历史检索、打印委托、图像比对与朱贵说明。
 - `dist/canteen/index.html`：一卡通、名册/流水/点名/签收核对、设备归档、采购和汇总。
 - `dist/video/index.html`：四张本地SVG切片构成轻量播放器，支持时间戳、推焦、水印及定时弹幕；没有MP4。
-- `dist/pan/index.html`：多账号资料柜、素材提取、沈栀授权与草稿、真解密Excel及处理意见。
+- `dist/pan/index.html`：多账号资料柜、素材提取、小范授权与草稿、真解密Excel及处理意见。
 
 调查从宿舍嫌隙与图纸来源，进入医疗漏列与后勤推诿，再通过五组互证形成审计闭环。不按19章逐页提交解锁；医疗、到场与审计支线可交错取证。
 

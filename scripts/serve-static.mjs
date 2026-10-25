@@ -1,0 +1,8 @@
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
+const root=path.resolve('dist'),port=Number(process.env.QH_TEST_PORT||4173);
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.mp4':'video/mp4','.vtt':'text/vtt; charset=utf-8','.json':'application/json'};
+const server=http.createServer((req,res)=>{let pathname;try{pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname);}catch{res.writeHead(400).end();return;}const file=path.resolve(root,'.'+pathname+(pathname.endsWith('/')?'index.html':''));if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}let stat;try{stat=fs.statSync(file);}catch{res.writeHead(404).end('Not found');return;}if(!stat.isFile()){res.writeHead(404).end();return;}const range=req.headers.range,headers={'Content-Type':mime[path.extname(file)]||'application/octet-stream','Accept-Ranges':'bytes','Cache-Control':'no-store'};let start=0,end=stat.size-1;if(range){const match=/^bytes=(\d+)-(\d*)$/.exec(range);if(!match){res.writeHead(416).end();return;}start=Number(match[1]);end=match[2]?Math.min(Number(match[2]),end):end;if(start>end){res.writeHead(416).end();return;}headers['Content-Range']=`bytes ${start}-${end}/${stat.size}`;}headers['Content-Length']=end-start+1;res.writeHead(range?206:200,headers);if(req.method==='HEAD')res.end();else fs.createReadStream(file,{start,end}).pipe(res);});
+server.listen(port,'127.0.0.1',()=>console.log(`Static fixture http://127.0.0.1:${port}`));
+for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>server.close(()=>process.exit()));

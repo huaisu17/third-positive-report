@@ -33,8 +33,31 @@ jobs:
         with:
           path: dist
 
+  browser:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Four-site browser journey and storage recovery
+        run: npx playwright test --project=${{ matrix.browser }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v4-browser-${{ matrix.browser }}
+          path: test-results
+          retention-days: 14
+
   deploy:
-    needs: validate
+    needs: [validate, browser]
     runs-on: ubuntu-latest
     permissions:
       pages: write
